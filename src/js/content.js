@@ -196,7 +196,9 @@ function search(regexString, configurationChanged) {
           regex = new RegExp(regexString, 'i');
         }
         highlight(regex, result.highlightColor, result.selectedColor, result.textColor, result.maxResults);
-        selectFirstNode(result.selectedColor);
+        // Guo: for my purposes, so that I don't lose my place in the web page, don't shift focus
+        // with 'selectFirstNode'.
+        //selectFirstNode(result.selectedColor);
         returnSearchInfo('search');
       }
     );
@@ -219,6 +221,9 @@ function search(regexString, configurationChanged) {
 /*** LISTENERS ***/
 /* Received search message, find regex matches */
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  // XXX Useful debug
+  //console.log(request.message, request);
+
   if ('search' == request.message) {
     search(request.regexString, request.configurationChanged);
   }
@@ -262,6 +267,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   else if ('getSearchInfo' == request.message) {
     sendResponse({message: "I'm alive!"});
     returnSearchInfo('getSearchInfo');
+
+    // Author: Guo. For my purposes, automatically start search on Ctrl+Shift+F
+    var configurationChanged = true;
+    search(searchInfo.regexString, configurationChanged);
   }
 });
 /*** LISTENERS ***/

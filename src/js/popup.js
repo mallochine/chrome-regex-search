@@ -350,4 +350,3 @@ chrome.storage.local.set({isSearchHistoryVisible: makeVisible});
 
 setCaseInsensitiveElement();
 /*** INIT ***/
-
